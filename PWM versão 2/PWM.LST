@@ -1,0 +1,274 @@
+8051 Assembler           Version 1.00   05/10/119 15:03:27    Page 1
+D:\UEMA\7º PERÍODO\MICROPROCESSADORES E MICROCONTROLADORES\Atividade 2\PWM versão 2\PWM.A51
+
+
+
+    1 0000              ;ALUNOS: ANDRÉ LUIS ROLIM DE CASTRO SILVA - 201627885, BIANCA VALÉRIA LOPES PEREIRA - 201621694;
+    2 0000              ;CLAUBER MARTINS PINTO - 201228693, LUIZ EUGÊNIO HOFFMANN LOPES - 201212755
+    3 0000              ;MARCOS VINICIUS JANUÁRIO DA SILVA - 201614715, MATHEUS PEREIRA DA SILVA - 201625684;
+    4 0000              ;PAULA FABIANNA SOARES OLIVEIRA - 201629647
+    5 0000              
+    6 0000              ;DISCIPLINA: MICROPROCESSADORES E MICROCONTROLADORES PROFESSOR: ELTON DE SOUSA E SILVA 
+    7 0000              
+    8 0000              ;PROJETO PWN - 8051 - Assembly com Perído de 24ms
+    9 0000              
+   10 0000              ;Botão P3.3             20%             ON = 4,8ms      OFF =  19,2ms      
+   11 0000              ;Botão P3.4             40%             ON = 9,6ms      OFF =  14,4ms
+   12 0000              ;Botão P3.5             60%             ON = 14,4ms     OFF =  9,6ms
+   13 0000              ;Botão P3.6             80%             ON = 19,2ms     OFF =  4,8ms
+   14 0000              ;Botão P3.7             99%             ON = 23,76ms    OFF =  0,24ms
+   15 0000                      org             0000h           ;origem no endereço 00h de memória
+   16 0000              principal:
+   17 0000 7520C0               mov             20h,#0C0h       ;move valor 11000000b para memória 20
+   18 0003 7521A4               mov             21h,#0A4h       ;move valor 10100100b para memória 21
+   19 0006 752299               mov             22h,#099h       ;move valor 10011001b para memória 22
+   20 0009 752382               mov             23h,#082h       ;move valor 10000010b para memória 23
+   21 000C 752480               mov             24h,#080h       ;move valor 10000000b para memória 24
+   22 000F 752598               mov             25h,#098h       ;move valor 10011000b para memória 25
+   23 0012 74FF                 mov             a,#0FFh         ;move a constante FFh para o acumulador
+   24 0014 F5B0                 mov             P3,a            ;inicializa P3
+   25 0016 20B302               jb              P3.3,menu3      ;botão 3 pressioinado? Não, pula para menu3
+   26 0019 8014                 sjmp            botao3          ;desvia para botao3      
+   27 001B              menu3:
+   28 001B 20B402               jb              P3.4,menu4      ;botão 4 pressioinado? Não, pula para menu4
+   29 001E 8021                 sjmp            botao4          ;desvia para botao4      
+   30 0020              menu4:
+   31 0020 20B502               jb              P3.5,menu5      ;botão 5 pressioinado? Não, pula para menu5
+   32 0023 802E                 sjmp            botao5          ;desvia para botao5      
+   33 0025              menu5:
+   34 0025 20B602               jb              P3.6,menu6      ;botão 6 pressioinado? Não, pula para menu6
+   35 0028 803B                 sjmp            botao6          ;desvia para botao6      
+   36 002A              menu6:
+   37 002A 20B7D3               jb              P3.7,principal  ;botão 7 pressioinado? Não, pula para principal
+   38 002D 8048                 sjmp            botao7          ;desvia para botao7      
+   39 002F              
+   40 002F              botao3:
+   41 002F 310C                 acall           display20
+   42 0031 75A000               mov             P2,#00h         ;escreve 11111111b em P2
+   43 0034 C290                 clr             P1.0            ;ligar BUZZER
+   44 0036 11A0                 acall           delay20         ;chama rotina delay20
+   45 0038 75A0FF               mov             P2,#0FFh        ;escreve 00000000b em P2
+   46 003B D290                 setb            P1.0            ;desligar BUZZER
+   47 003D 11D6                 acall           delay80         ;chama rotina delay80
+   48 003F 80EE                 sjmp            botao3          ;loop infinito
+   49 0041              
+   50 0041              botao4:
+   51 0041 311F                 acall           display40
+   52 0043 75A000               mov             P2,#00h         ;escreve 11111111b em P2
+   53 0046 C290                 clr             P1.0            ;ligar BUZZER
+   54 0048 11B2                 acall           delay40         ;chama rotina delay40
+   55 004A 75A0FF               mov             P2,#0FFh        ;escreve 00000000b em P2
+   56 004D D290                 setb            P1.0            ;desligar BUZZER
+   57 004F 11C4                 acall           delay60         ;chama rotina delay60
+8051 Assembler           Version 1.00   05/10/119 15:03:27    Page 2
+D:\UEMA\7º PERÍODO\MICROPROCESSADORES E MICROCONTROLADORES\Atividade 2\PWM versão 2\PWM.A51
+
+
+
+   58 0051 80EE                 sjmp            botao4          ;loop infinito
+   59 0053              
+   60 0053              botao5:
+   61 0053 3132                 acall           display60
+   62 0055 75A000               mov             P2,#00h         ;escreve 11111111b em P2
+   63 0058 C290                 clr             P1.0            ;ligar BUZZER
+   64 005A 11C4                 acall           delay60         ;chama rotina delay60
+   65 005C 75A0FF               mov             P2,#0FFh        ;escreve 00000000b em P2
+   66 005F D290                 setb            P1.0            ;desligar BUZZER
+   67 0061 11B2                 acall           delay40         ;chama rotina delay40
+   68 0063 80EE                 sjmp            botao5          ;loop infinito
+   69 0065              
+   70 0065              botao6:
+   71 0065 3145                 acall           display80
+   72 0067 75A000               mov             P2,#00h         ;escreve 11111111b em P2
+   73 006A C290                 clr             P1.0            ;ligar BUZZER
+   74 006C 11D6                 acall           delay80         ;chama rotina delay80
+   75 006E 75A0FF               mov             P2,#0FFh        ;escreve 00000000b em P2
+   76 0071 D290                 setb            P1.0            ;desligar BUZZER
+   77 0073 11A0                 acall           delay20         ;chama rotina delay20
+   78 0075 80EE                 sjmp            botao6          ;loop infinito
+   79 0077              
+   80 0077              botao7:
+   81 0077 C292                 clr             P1.2            ;unidade
+   82 0079 C293                 clr             P1.3            ;dezena
+   83 007B 852580               mov             P0,25h          ;escreve 99 no display
+   84 007E 75A000               mov             P2,#00h         ;escreve 11111111b em P2
+   85 0081 C290                 clr             P1.0            ;ligar BUZZER
+   86 0083 11E8                 acall           delay99         ;chama rotina delay99
+   87 0085 75A0FF               mov             P2,#0FFh        ;escreve 00000000b em P2
+   88 0088 D290                 setb            P1.0            ;desligar BUZZER
+   89 008A 118E                 acall           delay01         ;chama rotina delay01
+   90 008C 80E9                 sjmp            botao7          ;loop infinito
+   91 008E              
+   92 008E              delay01:
+   93 008E 758810               mov             TCON,#10h       ;habilita contagem do Timer0
+   94 0091 758901               mov             TMOD,#01h       ;Configura o Timer0 para incrementar com o ciclo de máquina
+   95 0094                                                      ;Configura o Timer0 no modo 1 (16bits)                                      
+   96 0094              ;T0 inicia em 65296 (TH = 0FFh e TL = 010h), para estourar em 240 us, 65536 - 240 = 65296 us
+   97 0094 758CFF               mov             TH0,#0FFh       ;Inicializa TH0 em 0B1h         
+   98 0097 758A10               mov             TL0,#010h       ;Inicializa TL0 em 0E0h
+   99 009A              loopO1:
+  100 009A 308DFD               jnb             TF0,loopO1      ;TF0 igual a 1? Não, descia para loop
+  101 009D C28D                 clr             TF0             ;Sim, Limpa a flag de TF0
+  102 009F 22                   ret                             ;retorna após a função acall
+  103 00A0              
+  104 00A0              delay20:
+  105 00A0 758810               mov             TCON,#10h       ;habilita contagem do Timer0
+  106 00A3 758901               mov             TMOD,#01h       ;Configura o Timer0 para incrementar com o ciclo de máquina
+  107 00A6                                                      ;Configura o Timer0 no modo 1 (16bits)                                      
+  108 00A6              ;T0 inicia em 60736 (TH = 0EDh e TL = 040h), para estourar em 4800 us, 65536 - 4800 = 60736 us
+  109 00A6 758CED               mov             TH0,#0EDh       ;Inicializa TH0 em 0B1h         
+  110 00A9 758A40               mov             TL0,#040h       ;Inicializa TL0 em 0E0h
+  111 00AC              loop2O:
+  112 00AC 308DFD               jnb             TF0,loop2O      ;TF0 igual a 1? Não, descia para loop
+  113 00AF C28D                 clr             TF0             ;Sim, Limpa a flag de TF0
+  114 00B1 22                   ret                             ;retorna após a função acall
+8051 Assembler           Version 1.00   05/10/119 15:03:27    Page 3
+D:\UEMA\7º PERÍODO\MICROPROCESSADORES E MICROCONTROLADORES\Atividade 2\PWM versão 2\PWM.A51
+
+
+
+  115 00B2              
+  116 00B2              delay40:
+  117 00B2 758810               mov             TCON,#10h       ;habilita contagem do Timer0
+  118 00B5 758901               mov             TMOD,#01h       ;Configura o Timer0 para incrementar com o ciclo de máquina
+  119 00B8                                                      ;Configura o Timer0 no modo 1 (16bits)                                      
+  120 00B8              ;T0 inicia em 55936 (TH = 0DAh e TL = 080h), para estourar em 9600 us, 65536 - 9600 = 55936 us
+  121 00B8 758CDA               mov             TH0,#0DAh       ;Inicializa TH0 em 0B1h         
+  122 00BB 758A80               mov             TL0,#080h       ;Inicializa TL0 em 0E0h
+  123 00BE              loop4O:
+  124 00BE 308DFD               jnb             TF0,loop4O      ;TF0 igual a 1? Não, descia para loop
+  125 00C1 C28D                 clr             TF0             ;Sim, Limpa a flag de TF0
+  126 00C3 22                   ret                             ;retorna após a função acall
+  127 00C4              
+  128 00C4              delay60:
+  129 00C4 758810               mov             TCON,#10h       ;habilita contagem do Timer0
+  130 00C7 758901               mov             TMOD,#01h       ;Configura o Timer0 para incrementar com o ciclo de máquina
+  131 00CA                                                      ;Configura o Timer0 no modo 1 (16bits)                                      
+  132 00CA              ;T0 inicia em 51136 (TH = 0C7h e TL = 0C0h), para estourar em 14400 us, 65536 - 14400 = 51136 us
+  133 00CA 758CC7               mov             TH0,#0C7h       ;Inicializa TH0 em 0B1h         
+  134 00CD 758AC0               mov             TL0,#0C0h       ;Inicializa TL0 em 0E0h
+  135 00D0              loop6O:
+  136 00D0 308DFD               jnb             TF0,loop6O      ;TF0 igual a 1? Não, descia para loop
+  137 00D3 C28D                 clr             TF0             ;Sim, Limpa a flag de TF0
+  138 00D5 22                   ret                             ;retorna após a função acall
+  139 00D6              
+  140 00D6              delay80:
+  141 00D6 758810               mov             TCON,#10h       ;habilita contagem do Timer0
+  142 00D9 758901               mov             TMOD,#01h       ;Configura o Timer0 para incrementar com o ciclo de máquina
+  143 00DC                                                      ;Configura o Timer0 no modo 1 (16bits)                                      
+  144 00DC              ;T0 inicia em 46336 (TH = 0B5h e TL = 000h), para estourar em 19200 us, 65536 - 19200 = 46336 us
+  145 00DC 758CB5               mov             TH0,#0B5h       ;Inicializa TH0 em 0B1h         
+  146 00DF 758A00               mov             TL0,#000h       ;Inicializa TL0 em 0E0h
+  147 00E2              loop8O:
+  148 00E2 308DFD               jnb             TF0,loop8O      ;TF0 igual a 1? Não, descia para loop
+  149 00E5 C28D                 clr             TF0             ;Sim, Limpa a flag de TF0
+  150 00E7 22                   ret                             ;retorna após a função acall
+  151 00E8              
+  152 00E8              delay99:
+  153 00E8 758810               mov             TCON,#10h       ;habilita contagem do Timer0
+  154 00EB 758901               mov             TMOD,#01h       ;Configura o Timer0 para incrementar com o ciclo de máquina
+  155 00EE                                                      ;Configura o Timer0 no modo 1 (16bits)                                      
+  156 00EE              ;T0 inicia em 41776 (TH = 0A3h e TL = 030h), para estourar em 23760 us, 65536 - 23760 = 41776 us
+  157 00EE 758CA3               mov             TH0,#0A3h       ;Inicializa TH0 em 0B1h         
+  158 00F1 758A30               mov             TL0,#030h       ;Inicializa TL0 em 0E0h
+  159 00F4              loop99:
+  160 00F4 308DFD               jnb             TF0,loop99      ;TF0 igual a 1? Não, descia para loop
+  161 00F7 C28D                 clr             TF0             ;Sim, Limpa a flag de TF0
+  162 00F9 22                   ret                             ;retorna após a função acall
+  163 00FA              
+  164 00FA              delayDisplay:
+  165 00FA 758810               mov             TCON,#10h       ;habilita contagem do Timer0
+  166 00FD 758901               mov             TMOD,#01h       ;Configura o Timer0 para incrementar com o ciclo de máquina
+  167 0100                                                      ;Configura o Timer0 no modo 1 (16bits)                                      
+  168 0100              ;T0 inicia em 65512 (TH = 0FFh e TL = 0E8h), para estourar em 24 us, 65536 - 24 = 65512 us
+  169 0100 758CFF               mov             TH0,#0FFh       ;Inicializa TH0 em 0B1h         
+  170 0103 758AE8               mov             TL0,#0E8h       ;Inicializa TL0 em 0E0h
+  171 0106              loopDisplay:
+8051 Assembler           Version 1.00   05/10/119 15:03:27    Page 4
+D:\UEMA\7º PERÍODO\MICROPROCESSADORES E MICROCONTROLADORES\Atividade 2\PWM versão 2\PWM.A51
+
+
+
+  172 0106 308DFD               jnb             TF0,loopDisplay      ;TF0 igual a 1? Não, descia para loop
+  173 0109 C28D                 clr             TF0             ;Sim, Limpa a flag de TF0
+  174 010B 22                   ret                             ;retorna após a função acall
+  175 010C              
+  176 010C              
+  177 010C              
+  178 010C              display20:
+  179 010C C293                 clr             P1.3            ;dezena
+  180 010E D292                 setb            P1.2            ;unidade
+  181 0110 852080               mov             P0,20h          ;escreve 00 no display
+  182 0113 118E                 acall           delay01
+  183 0115 D293                 setb            P1.3            ;dezena
+  184 0117 C292                 clr             P1.2            ;unidade
+  185 0119 852180               mov             P0,21h          ;escreve 20 no display
+  186 011C 11FA                 acall           delayDisplay
+  187 011E 22                   ret                             ;retorna após a função acall
+  188 011F              
+  189 011F              display40:
+  190 011F C293                 clr             P1.3            ;dezena
+  191 0121 D292                 setb            P1.2            ;unidade
+  192 0123 852080               mov             P0,20h          ;escreve 00 no display
+  193 0126 11FA                 acall           delayDisplay
+  194 0128 D293                 setb            P1.3            ;dezena
+  195 012A C292                 clr             P1.2            ;unidade
+  196 012C 852280               mov             P0,22h          ;escreve 40 no display
+  197 012F 11FA                 acall           delayDisplay
+  198 0131 22                   ret                             ;retorna após a função acall
+  199 0132              
+  200 0132              display60:
+  201 0132 C293                 clr             P1.3            ;dezena
+  202 0134 D292                 setb            P1.2            ;unidade
+  203 0136 852080               mov             P0,20h          ;escreve 00 no display
+  204 0139 11FA                 acall           delayDisplay
+  205 013B D293                 setb            P1.3            ;dezena
+  206 013D C292                 clr             P1.2            ;unidade
+  207 013F 852380               mov             P0,23h          ;escreve 60 no display
+  208 0142 11FA                 acall           delayDisplay
+  209 0144 22                   ret                             ;retorna após a função acall
+  210 0145              
+  211 0145              display80:
+  212 0145 C293                 clr             P1.3            ;dezena
+  213 0147 D292                 setb            P1.2            ;unidade
+  214 0149 852080               mov             P0,20h          ;escreve 00 no display
+  215 014C 11FA                 acall           delayDisplay
+  216 014E D293                 setb            P1.3            ;dezena
+  217 0150 C292                 clr             P1.2            ;unidade
+  218 0152 852480               mov             P0,24h          ;escreve 80 no display
+  219 0155 11FA                 acall           delayDisplay
+  220 0157 22                   ret                             ;retorna após a função acall
+  221 0158              
+  222 0158                      end                             ;Fim do programa
+
+Defined Symbols:
+
+Defined Labels:
+  botao3                                    00002F  47
+  botao4                                    000041  65
+  botao5                                    000053  83
+  botao6                                    000065  101
+  botao7                                    000077  119
+  delay01                                   00008E  142
+  delay20                                   0000A0  160
+  delay40                                   0000B2  178
+  delay60                                   0000C4  196
+  delay80                                   0000D6  214
+  delay99                                   0000E8  232
+  delayDisplay                              0000FA  250
+  display20                                 00010C  268
+  display40                                 00011F  287
+  display60                                 000132  306
+  display80                                 000145  325
+  loop2O                                    0000AC  172
+  loop4O                                    0000BE  190
+  loop6O                                    0000D0  208
+  loop8O                                    0000E2  226
+  loop99                                    0000F4  244
+  loopDisplay                               000106  262
+  loopO1                                    00009A  154
+  menu3                                     00001B  27
+  menu4                                     000020  32
+  menu5                                     000025  37
+  menu6                                     00002A  42
+  principal                                 000000  0
